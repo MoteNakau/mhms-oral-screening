@@ -20,26 +20,46 @@
 // SERVER-SIDE CONFIGURATION (DO NOT EXPOSE TO CLIENT)
 // ============================================================
 const CONFIG = {
-  // Spreadsheet ID - set after creating the Google Sheet
-  SPREADSHEET_ID: '', // SET THIS
+  SPREADSHEET_ID: 'YOUR_SPREADSHEET_ID',
+  PHOTO_FOLDER_ID: 'YOUR_PHOTO_FOLDER_ID',
 
-  // Drive folder for clinical photographs - PRIVATE
-  PHOTO_FOLDER_ID: '', // SET THIS
-
-  // Authorized users (email addresses)
-  // Authorization MUST be enforced server-side
   AUTHORIZED_USERS: {
-    // SCREENER role
-    // 'screener@mhms.gov.ki': 'SCREENER',
-
-    // SUPERVISOR role
-    // 'supervisor@mhms.gov.ki': 'SUPERVISOR',
-
-    // ADMIN role
-    // 'admin@mhms.gov.ki': 'ADMIN',
+    'ktitintaake@gmail.com': 'SUPERVISOR',
+    'nauantabuaka@gmail.com': 'SUPERVISOR',
+    'antje.reiher@mhms.gov.ki': 'SUPERVISOR',
+    'motenakau@gmail.com': 'ADMIN',
+    'mootenakau@gmail.com': 'SUPERVISOR',
+    'tebakai.taneriwe@gmail.com': 'SUPERVISOR',
+    'mburabonita@gmail.com': 'SUPERVISOR',
+    'atekaibeti@gmail.com': 'SUPERVISOR',
+    'raerakaitu@gmail.com': 'SUPERVISOR',
+    'aotiubaik95@gmail.com': 'SUPERVISOR',
+    'jrkotua2020@gmail.com': 'SUPERVISOR',
+    'roromaurin@gmail.com': 'SUPERVISOR',
+    'ruthtimeon8697@gmail.com': 'SUPERVISOR',
+    'bootiribabaiti@gmail.com': 'SUPERVISOR',
+    'katenatikaareti2014@gmail.com': 'SUPERVISOR',
+    'ruciravi@gmail.com': 'SUPERVISOR',
+    'jbtiorina2509@gmail.com': 'SUPERVISOR',
+    'knarereba@gmail.com': 'SUPERVISOR',
+    'btoatokia@gmail.com': 'SUPERVISOR',
+    'teweramire@gmail.com': 'SUPERVISOR',
+    'teemwamilha@gmail.com': 'SUPERVISOR',
+    'rtaeribwa@gmail.com': 'SUPERVISOR',
+    'tbauro04@gmail.com': 'SUPERVISOR',
+    'temaeul@gmail.com': 'SUPERVISOR',
+    'nakara.ribabaiti@gmail.com': 'SUPERVISOR',
+    'nikunau9@gmail.com': 'SUPERVISOR',
+    'rktunet5@gmail.com': 'SUPERVISOR',
+    'toatatitaake@gmail.com': 'SUPERVISOR',
+    'mvianeitib78@gmail.com': 'SUPERVISOR',
+    'msterawea.70@gmail.com': 'SUPERVISOR',
+    'kmwemwe72@gmail.com': 'SUPERVISOR',
   },
+  // Production: only users listed above are authorized.
+  // 'Rabangaki BioMed' was excluded because it is not a login email address.
+  ALLOW_ANY_AUTHENTICATED_USER: false,
 
-  // Sheet names
   SHEETS: {
     PATIENTS: 'Patients',
     SCREENINGS: 'Screenings',
@@ -57,12 +77,10 @@ const CONFIG = {
     AUDIT_LOG: 'Audit_Log',
   },
 
-  // Limits
-  MAX_REQUEST_SIZE: 10 * 1024 * 1024, // 10MB
-  MAX_PHOTO_SIZE: 5 * 1024 * 1024, // 5MB
+  MAX_REQUEST_SIZE: 10 * 1024 * 1024,
+  MAX_PHOTO_SIZE: 5 * 1024 * 1024,
   MAX_RETRIES: 5,
 
-  // Clinical
   AGE_THRESHOLD_FOR_M: 10,
 };
 
@@ -169,14 +187,15 @@ function getSessionEmail() {
 
 function isAuthorized(email) {
   if (!email) return false;
+  if (CONFIG.ALLOW_ANY_AUTHENTICATED_USER) return true;
   if (!CONFIG.AUTHORIZED_USERS[email]) return false;
   return true;
 }
 
 function getUserRole(email) {
+  if (CONFIG.ALLOW_ANY_AUTHENTICATED_USER) return 'ADMIN';
   return CONFIG.AUTHORIZED_USERS[email] || null;
 }
-
 function requireRole(email, requiredRoles) {
   const role = getUserRole(email);
   if (!role || !requiredRoles.includes(role)) {
@@ -612,9 +631,9 @@ function getPatientAge(patientId, screeningDate) {
 }
 
 function saveToothFindings(ss, screeningId, findings) {
-  let sheet = ss.getSheetByName(CONFIG.SHEETS.TOOT_H_FINDINGS);
+  let sheet = ss.getSheetByName(CONFIG.SHEETS.TOOTH_FINDINGS);
   if (!sheet) {
-    sheet = ss.insertSheet(CONFIG.SHEETS.TOOT_H_FINDINGS);
+    sheet = ss.insertSheet(CONFIG.SHEETS.TOOTH_FINDINGS);
     sheet.appendRow(['Screening_ID', 'ToothCode', 'Dentition', 'Status']);
   }
   for (const f of findings) {
