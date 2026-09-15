@@ -28,7 +28,7 @@ const CONFIG = {
     'nauantabuaka@gmail.com': 'SUPERVISOR',
     'antje.reiher@mhms.gov.ki': 'SUPERVISOR',
     'motenakau@gmail.com': 'ADMIN',
-    'mootenakau@gmail.com': 'SUPERVISOR',
+    'mootenakau@gmail.com': 'ADMIN',
     'tebakai.taneriwe@gmail.com': 'SUPERVISOR',
     'mburabonita@gmail.com': 'SUPERVISOR',
     'atekaibeti@gmail.com': 'SUPERVISOR',
